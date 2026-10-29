@@ -1,0 +1,6 @@
+{
+  "name": "LinguaFlow — Localization Project & Resource Coordination Platform",
+  "description": "Production-grade localization operations platform for translation project coordination, linguistic resource allocation, source-file preparation, deadline monitoring, linguistic QA, and reporting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

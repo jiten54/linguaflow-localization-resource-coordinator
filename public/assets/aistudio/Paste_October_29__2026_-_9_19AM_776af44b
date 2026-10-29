@@ -1,0 +1,1130 @@
+# MASTER DEVELOPMENT PROMPT: LinguaFlow — Localization Project & Resource Coordination Platform
+
+## 1. Project Overview
+
+Build a complete, production-quality, full-stack web application named **LinguaFlow — Localization Project & Resource Coordination Platform**.
+
+The platform must simulate the daily operations of a professional translation and localization services company. Its workflows must closely align with the responsibilities of an Associate Resource Coordinator at RWS, including translation project coordination, translator allocation, source-file preparation, deadline monitoring, linguistic quality checks, stakeholder communication, and operational reporting.
+
+The application is an independent portfolio project, not an official RWS product.
+
+**Primary objective:** Create a polished, functional, deployable business application that demonstrates practical coordination skills, attention to detail, organization, process compliance, resource management, communication, and timely delivery.
+
+Do not build a generic admin dashboard, static prototype, or unnecessary AI chatbot. Build a genuine operational workflow in which actions persist to a database and update related dashboards, assignments, timelines, and reports.
+
+## 2. Mandatory Technology Stack
+
+### Frontend
+- React with TypeScript.
+- Vite.
+- Tailwind CSS.
+- shadcn/ui for accessible interface components.
+- Lucide icons.
+- Recharts for analytics.
+- React Router for navigation.
+- TanStack Query for API data fetching and cache management.
+- React Hook Form and Zod for form validation.
+
+### Backend
+- Python 3.12 or a compatible supported version.
+- FastAPI.
+- Pydantic for validation and response schemas.
+- SQLAlchemy 2.x.
+- Alembic for database migrations.
+- PostgreSQL for persistent data.
+- Secure password hashing and authenticated API access.
+- Pytest for automated backend testing.
+
+### Deployment
+- **Frontend:** Vercel.
+- **Backend:** Render or another compatible Python hosting provider.
+- **Database:** Managed PostgreSQL with persistent storage.
+- **Version control:** Git and GitHub.
+- **Local development:** Docker Compose.
+- **API documentation:** FastAPI-generated OpenAPI documentation.
+
+Use compatible, maintained dependencies and pin versions where appropriate. Do not add unnecessary services or paid dependencies.
+
+## 3. Vercel-First Deployment Architecture
+
+The architecture must be designed specifically for successful deployment to Vercel, with the Python API and database hosted separately.
+
+### Frontend deployment
+
+Deploy the React and Vite frontend to Vercel.
+
+Configure:
+
+- Build command: `npm run build`
+- Output directory: `dist`
+- Install command appropriate to the package manager.
+- Root directory appropriate to the repository structure.
+- SPA routing rewrites so refreshing a nested application route works correctly.
+- Production environment variable: `VITE_API_BASE_URL`
+- Preview and production environment configurations where appropriate.
+
+Never hardcode the production API URL throughout the frontend. Centralize API configuration in a reusable client.
+
+### Backend deployment
+
+Deploy the FastAPI application to Render.
+
+Configure:
+
+- A supported Python runtime.
+- Dependency installation from the backend dependency file.
+- A production ASGI startup command, such as `uvicorn app.main:app --host 0.0.0.0 --port $PORT`, adjusted to the actual project structure.
+- A health-check endpoint.
+- Production database connection configuration.
+- Secure environment variables.
+- Database migrations during a controlled deployment process.
+- Production logging and structured error responses.
+
+The backend must not depend on the Vercel filesystem, frontend build output, or local development files.
+
+### Database deployment
+
+Use managed PostgreSQL.
+
+- Store the database URL in the backend environment.
+- Use SQLAlchemy connection management.
+- Run Alembic migrations.
+- Enforce relational constraints and appropriate indexes.
+- Use transactions for multi-step operations.
+- Persist all business records.
+- Never use in-memory lists or temporary local databases as production storage.
+- Do not expose database credentials to the browser.
+
+### Production connectivity
+
+Implement:
+
+- HTTPS API communication.
+- Restrictive CORS configuration.
+- Secure authentication and authorization.
+- Request validation and consistent error handling.
+- File upload size and type restrictions.
+- Safe file storage using persistent object storage if durable file downloads are required.
+- Frontend loading, success, empty, and failure states.
+- Health checks and deployment verification.
+
+Do not claim the application is deployed until the live application has been tested successfully.
+
+## 4. Product Design and User Experience
+
+Create an enterprise-grade interface suitable for an international localization operations team.
+
+### Visual direction
+
+Use a refined, modern operations-console aesthetic:
+
+- Deep navy and slate surfaces.
+- Neutral white or light-gray content panels.
+- Restrained cobalt-blue accents.
+- Consistent typography and spacing.
+- Accessible color contrast.
+- Compact, readable data tables.
+- Clear status indicators.
+- Subtle borders and restrained shadows.
+- Responsive layouts.
+- Professional empty states and confirmation dialogs.
+
+The UI should prioritize usability and clarity over decorative animations.
+
+### Main application shell
+
+Build:
+
+- Collapsible sidebar navigation.
+- Top navigation bar.
+- Global search.
+- Notifications panel.
+- User profile and role information.
+- Breadcrumb navigation.
+- Page-specific actions.
+- Responsive mobile navigation.
+
+Use a consistent design system for buttons, inputs, tables, dialogs, badges, forms, charts, and alerts.
+
+Do not use oversized headings, excessive gradients, unnecessary glassmorphism, or generic template styling.
+
+### Required routes
+
+Implement the following working screens:
+
+1. `/login`
+2. `/dashboard`
+3. `/projects`
+4. `/projects/new`
+5. `/projects/:id`
+6. `/resources`
+7. `/resources/:id`
+8. `/assignments`
+9. `/files`
+10. `/calendar`
+11. `/quality`
+12. `/communications`
+13. `/reports`
+14. `/settings/users`
+15. `/settings`
+
+Protect authenticated routes and enforce role permissions in both frontend and backend.
+
+## 5. Authentication and User Roles
+
+Implement secure authentication with password hashing and a documented session or token strategy.
+
+Support three primary roles.
+
+### Resource Coordinator
+
+Can:
+
+- Create and update projects.
+- Prepare project files.
+- View eligible linguistic resources.
+- Compare translator candidates.
+- Create and manage assignments.
+- Track deadlines.
+- Draft stakeholder communications.
+- Manage operational tasks.
+- View permitted reports.
+
+### Project Manager
+
+Can:
+
+- View project portfolios.
+- Monitor operational performance.
+- Approve authorized exceptions.
+- Review project risks.
+- Monitor quality and delivery.
+- View reports.
+- Manage permitted workflow transitions.
+
+### Linguistic Resource / Reviewer
+
+Can:
+
+- View assigned projects.
+- Access permitted project instructions.
+- Update their assigned work status.
+- Record progress.
+- Complete linguistic review checklists where authorized.
+- Raise issues.
+- View their own workload and assignments.
+
+Enforce authorization on the backend for every protected operation.
+
+Do not rely on hiding buttons in the frontend as a security mechanism.
+
+Provide a development-only demo account seeding mechanism. Never publish real credentials, secrets, tokens, or private customer information.
+
+## 6. Operations Dashboard
+
+Build a data-driven dashboard that provides a clear operational overview.
+
+### KPI cards
+
+Include:
+
+- Total active projects.
+- Projects awaiting file preparation.
+- Projects awaiting resource assignment.
+- Projects currently in translation.
+- Projects awaiting linguistic review.
+- Projects approaching their deadlines.
+- Overdue projects.
+- Projects delivered on time.
+- Available linguistic resources.
+- Open quality issues.
+
+### Charts
+
+Implement:
+
+- Project status distribution.
+- Weekly project throughput.
+- On-time delivery trend.
+- Resource utilization.
+- Workload distribution.
+- Language-pair demand.
+- Quality issue severity.
+- Assignment turnaround time.
+
+### Operational task queue
+
+Display:
+
+- Unassigned projects.
+- Incomplete file preparation.
+- Projects with missing requirements.
+- Resources approaching capacity.
+- Projects with deadline risks.
+- Outstanding quality reviews.
+- Pending approval actions.
+
+Every KPI and chart must be calculated from actual persisted records through backend endpoints.
+
+Filters must include date range, client, language pair, priority, coordinator, and project status where relevant.
+
+Include meaningful empty states and prevent invalid calculations when no data exists.
+
+## 7. Translation Project Management
+
+Implement a complete project management workflow.
+
+### Project lifecycle
+
+Use the following stages:
+
+**Request Received → File Preparation → Resource Assignment → Translation → Linguistic Review → Quality Assurance → Delivery → Completed**
+
+Include a separate `On Hold` state with an explanation and authorized resume action.
+
+Allow only valid status transitions. Record every transition with its timestamp and acting user.
+
+### Project fields
+
+Each project should contain:
+
+- Unique project reference.
+- Project name.
+- Client.
+- Project coordinator.
+- Request description.
+- Source language.
+- One or more target languages where supported.
+- Subject-matter domain.
+- Word count.
+- Number of files.
+- Priority.
+- Creation timestamp.
+- Requested start date.
+- Delivery deadline.
+- Assigned translator or translators.
+- Assigned reviewer.
+- Translation memory and glossary requirements.
+- Customer instructions.
+- Project status.
+- Risk status.
+- Estimated effort.
+- Internal notes.
+- Delivery checklist.
+- Activity history.
+
+### Required functionality
+
+Implement:
+
+- Create project.
+- Edit project.
+- View detailed project information.
+- Search and filter projects.
+- Sort and paginate project lists.
+- Assign coordinators.
+- Track progress.
+- Update deadlines with appropriate permissions.
+- Place projects on hold.
+- Resume projects.
+- View status history.
+- Record delivery completion.
+- Close completed projects.
+
+Use a project detail page with tabs for Overview, Files, Resources, Timeline, Quality, and Communications.
+
+Prevent completion when required workflow steps remain unfinished.
+
+Use transactional backend operations when a single action affects multiple related records.
+
+## 8. Linguistic Resource Directory
+
+Create a resource directory for translators, reviewers, and other linguistic specialists.
+
+### Resource profile fields
+
+Include:
+
+- Resource ID.
+- Display name.
+- Resource type.
+- Source and target language pairs.
+- Language proficiency.
+- Subject-matter expertise.
+- Qualification verification status.
+- Availability status.
+- Working hours.
+- Time zone.
+- Capacity limits.
+- Current workload.
+- Quality review history.
+- Assignment history.
+- Contact details for authorized users.
+- Internal notes.
+
+### Resource management functionality
+
+Implement:
+
+- Create and update resource records.
+- Search by language pair.
+- Filter by expertise and availability.
+- View workload.
+- View assignment history.
+- Track qualification status.
+- Mark resources unavailable.
+- Identify resources with insufficient capacity.
+
+Clearly distinguish fictional demo records from real linguistic resources.
+
+Protect personal contact details through role-based permissions.
+
+## 9. Transparent Translator Matching Engine
+
+Build a deterministic, explainable resource-matching algorithm.
+
+The engine must identify eligible candidates based on:
+
+1. Required source and target language pairs.
+2. Qualification and proficiency requirements.
+3. Subject-matter expertise.
+4. Availability during the requested assignment period.
+5. Remaining capacity.
+6. Relevant historical quality indicators where sufficient data exists.
+
+### Matching workflow
+
+For each unassigned project:
+
+- Retrieve potential resources.
+- Apply mandatory eligibility checks.
+- Exclude unqualified or unavailable resources.
+- Evaluate capacity and deadline feasibility.
+- Rank eligible candidates.
+- Display a match score and explanation.
+- Allow the coordinator to compare candidates.
+- Confirm or cancel an assignment.
+- Record the assignment decision.
+
+Provide a transparent weighted scoring model for eligible candidates, with configurable weights that total 100%.
+
+Clearly distinguish hard eligibility requirements from ranking preferences. A high score must never override a mandatory qualification or availability failure.
+
+Show explanations such as:
+
+- Required language pair matches.
+- Relevant technical or business expertise.
+- Sufficient remaining workload capacity.
+- Availability aligns with the requested schedule.
+- Historical quality information is available.
+
+If no suitable candidate exists, return an explicit reason and suggest the next operational action.
+
+Prevent duplicate assignments, conflicting allocations, and capacity violations.
+
+Record authorized overrides with the user's identity, timestamp, reason, and affected resource.
+
+Do not use machine learning merely to make the project appear more advanced.
+
+## 10. Assignment and Workload Management
+
+Create a dedicated assignment workspace.
+
+Display:
+
+- Assignment reference.
+- Project.
+- Linguistic resource.
+- Language pair.
+- Assigned word count.
+- Estimated effort.
+- Assignment date.
+- Expected start and completion.
+- Current status.
+- Remaining workload.
+- Deadline risk.
+
+Support:
+
+- Assign resource.
+- Reassign resource.
+- Cancel assignment.
+- Update assignment progress.
+- Record assignment acceptance.
+- Flag assignment conflicts.
+- Review workload by week.
+- Compare planned versus actual completion.
+
+Implement conflict detection using date ranges and resource capacity.
+
+Use configurable assumptions for words-per-hour, working days, and non-working periods when calculating estimated effort.
+
+Label estimated completion dates as estimates rather than guaranteed delivery times.
+
+## 11. File Analysis and Preparation Center
+
+Build a functional source-file preparation module.
+
+### Initial supported formats
+
+- TXT.
+- CSV.
+
+Design the module so additional formats can be introduced later.
+
+### Upload handling
+
+Implement:
+
+- File selection and upload.
+- Extension and content validation.
+- File size limits.
+- Safe filenames.
+- Empty-file detection.
+- UTF-8 decoding checks where applicable.
+- Duplicate detection.
+- Upload progress.
+- Processing status.
+- Error reporting.
+- Project association.
+- Authorized download.
+
+Do not trust file extensions alone. Validate file contents where practical.
+
+Store file metadata and preparation results in PostgreSQL. Use persistent object storage for files that must remain downloadable after deployment. Do not depend on ephemeral application filesystems for permanent storage.
+
+### File analysis report
+
+For each file, show:
+
+- Filename.
+- Format.
+- Size.
+- Upload timestamp.
+- Associated project.
+- Estimated word count.
+- Processing result.
+- Encoding warnings.
+- Empty-file or duplicate warnings.
+- Preparation checklist.
+- Readiness status.
+
+Implement reasonable word-count rules for supported formats and document their limitations.
+
+### Preparation checklist
+
+Allow coordinators to confirm:
+
+- Files received.
+- Files are readable.
+- Source and target languages verified.
+- Reference materials identified.
+- Instructions prepared.
+- Glossary requirements documented.
+- Word count reviewed.
+- Delivery requirements recorded.
+
+Only mark a file package ready after the mandatory checks have been completed.
+
+### CAT-tool handoff
+
+Generate a downloadable handoff manifest containing:
+
+- Project reference.
+- Client reference where appropriate.
+- Language pairs.
+- File inventory.
+- Word counts.
+- Translator instructions.
+- Glossary and translation memory references.
+- Deadline.
+- Preparation checklist.
+
+This is a simulated CAT-tool handoff workflow.
+
+Do not claim that the application directly integrates with SDL Trados Studio, generates proprietary Trados packages, or synchronizes translation memories unless a real supported integration is implemented and tested.
+
+## 12. Deadline Monitoring and Risk Management
+
+Build a calendar and deadline-monitoring module.
+
+### Calendar views
+
+Support:
+
+- Month view.
+- Week view.
+- Upcoming deadlines list.
+- Project-specific deadline details.
+- Filters by status, priority, coordinator, and language pair.
+
+### Risk rules
+
+Flag a project when:
+
+- Its deadline has passed and required work remains.
+- It is approaching the deadline without a required resource.
+- File preparation remains incomplete.
+- An assignment is blocked.
+- A required review is outstanding.
+- The estimated remaining work exceeds available capacity.
+- A dependency is unresolved.
+
+Use configurable risk thresholds.
+
+For example, an unassigned project due within two working days may receive an urgent warning. Make such thresholds configurable rather than presenting them as universal rules.
+
+### Risk management functionality
+
+Include:
+
+- Risk severity.
+- Reason for the risk.
+- Detection timestamp.
+- Suggested corrective action.
+- Assigned owner.
+- Acknowledgment status.
+- Resolution notes.
+- Resolution timestamp.
+
+Support reassignment suggestions and deadline-change requests.
+
+Do not automatically change deadlines or reassign translators without authorized user confirmation.
+
+## 13. Linguistic Quality Assurance
+
+Build a practical review and quality-control workspace.
+
+### Review checklist
+
+Include:
+
+- Required deliverables present.
+- Correct target language.
+- Glossary compliance confirmed.
+- Terminology consistency reviewed.
+- Reviewer comments resolved.
+- Formatting and file integrity checked.
+- Delivery metadata complete.
+- Required approval recorded.
+
+Allow project-specific mandatory checks.
+
+### Quality issue management
+
+Each issue should contain:
+
+- Issue reference.
+- Project.
+- Issue category.
+- Severity.
+- Description.
+- Reporter.
+- Assigned owner.
+- Status.
+- Corrective action.
+- Resolution notes.
+- Created and resolved timestamps.
+
+Support issue statuses such as Open, In Progress, Resolved, and Accepted with Justification.
+
+### Quality reporting
+
+Calculate:
+
+- Open quality issues.
+- Issues by severity.
+- Average issue resolution time.
+- Review completion rate.
+- Projects awaiting approval.
+- Completed quality checklists.
+
+Do not claim to measure translation accuracy automatically without a validated linguistic evaluation system.
+
+## 14. Communication Center
+
+Build a project-linked communication workspace.
+
+### Supported communication templates
+
+- New translator assignment.
+- Assignment confirmation request.
+- Project clarification request.
+- Deadline reminder.
+- File preparation request.
+- Project status update.
+- Quality issue notification.
+- Delivery confirmation.
+
+### Features
+
+Implement:
+
+- Editable message templates.
+- Automatic population of relevant project details.
+- Recipient role.
+- Subject and body.
+- Message creation timestamp.
+- Draft status.
+- Communication history.
+- Project association.
+- Copy-to-clipboard functionality.
+
+Use professional, concise business English.
+
+If a message is not connected to an email provider, clearly label it as a draft or simulated communication. Do not claim that an email was sent when no delivery occurred.
+
+Keep communication records subject to role-based permissions.
+
+## 15. Operational Analytics and Reporting
+
+Create a reporting module for coordinators and project managers.
+
+### Required metrics
+
+**On-time delivery rate**
+
+Calculate the proportion of eligible completed projects delivered by their recorded deadlines.
+
+**Average turnaround time**
+
+Calculate the average elapsed time between the defined project start event and completion.
+
+**Assignment turnaround time**
+
+Measure the elapsed time between a project becoming ready for assignment and its resource assignment.
+
+**Resource utilization**
+
+Calculate assigned effort relative to available capacity for the selected period.
+
+**Quality issue resolution time**
+
+Calculate the average resolution duration for resolved issues.
+
+**Workflow backlog**
+
+Count projects awaiting action at each workflow stage.
+
+**Project throughput**
+
+Count projects completed within the selected period.
+
+Document the definition, numerator, denominator, date boundaries, and treatment of incomplete data for each KPI.
+
+### Reporting features
+
+Include:
+
+- Date-range filters.
+- Client filters.
+- Language-pair filters.
+- Project status filters.
+- Coordinator filters.
+- Interactive charts.
+- Summary tables.
+- CSV exports.
+- Print-friendly reports.
+
+Generate exports from authorized backend queries. Do not expose data that the requesting user is not permitted to access.
+
+## 16. Database Design
+
+Create a normalized PostgreSQL schema with migrations for the following entities:
+
+- Users.
+- Roles and permissions.
+- Clients.
+- Linguistic resources.
+- Resource language pairs.
+- Resource specialties.
+- Availability records.
+- Translation projects.
+- Project target languages.
+- Project files.
+- File preparation reports.
+- Assignments.
+- Tasks and deadlines.
+- Workflow history.
+- Quality reviews.
+- Quality issues.
+- Communications.
+- Notifications.
+- Audit logs.
+
+Use foreign keys, uniqueness constraints, appropriate indexes, timestamps, and explicit relationships.
+
+Use transactions for operations such as resource assignment and workflow completion.
+
+Use consistent naming conventions and maintain database integrity when records are updated or deleted.
+
+Avoid storing multiple unrelated entities as unstructured JSON when relational tables are more appropriate.
+
+Create realistic seed data through a repeatable command.
+
+## 17. Backend API Design
+
+Implement versioned REST endpoints under `/api/v1`.
+
+Suggested endpoint groups:
+
+- `/api/v1/auth`
+- `/api/v1/users`
+- `/api/v1/clients`
+- `/api/v1/projects`
+- `/api/v1/resources`
+- `/api/v1/assignments`
+- `/api/v1/files`
+- `/api/v1/deadlines`
+- `/api/v1/quality`
+- `/api/v1/communications`
+- `/api/v1/reports`
+- `/api/v1/dashboard`
+- `/api/v1/health`
+
+Provide:
+
+- Request validation.
+- Response schemas.
+- Pagination.
+- Filtering and sorting.
+- Appropriate HTTP status codes.
+- Consistent error responses.
+- Authentication dependencies.
+- Role-based authorization.
+- Database transaction handling.
+- OpenAPI documentation.
+
+Implement the endpoints actually used by the frontend. Do not create disconnected or decorative API routes.
+
+## 18. Security and Production Readiness
+
+Implement:
+
+- Password hashing using a modern password-hashing library.
+- Secure authentication.
+- Authorization checks on every protected endpoint.
+- Input validation.
+- Safe file uploads.
+- Restrictive CORS.
+- Environment-based configuration.
+- Safe error messages.
+- Sensitive-data redaction in logs.
+- Database constraints.
+- Audit logs for critical operations.
+- Appropriate rate limiting for sensitive endpoints.
+- Secure cookie or token handling according to the chosen authentication architecture.
+- Protection against unauthorized resource access.
+- No production secrets in source control.
+
+Use HTTPS in production and validate the actual deployed configuration.
+
+Do not expose internal stack traces, database credentials, or sensitive user information in API responses.
+
+## 19. Automated Testing
+
+Write meaningful automated tests for business logic and critical user journeys.
+
+### Backend tests
+
+Test:
+
+- Authentication and permissions.
+- Project creation and validation.
+- Workflow transitions.
+- Resource matching.
+- Mandatory eligibility checks.
+- Assignment conflicts.
+- Capacity limits.
+- Deadline-risk rules.
+- File validation.
+- Word-count calculations.
+- Quality review completion.
+- KPI calculations.
+- CSV report generation.
+- Unauthorized access.
+- Database integrity.
+
+### Frontend tests
+
+Test:
+
+- Login and route protection.
+- Project creation forms.
+- Search and filtering.
+- Resource selection.
+- Assignment confirmation.
+- File preparation feedback.
+- Quality issue updates.
+- Error and empty states.
+- Role-specific controls.
+
+Use isolated test data and a test database.
+
+Do not mark the application complete simply because it compiles. Verify that the principal user journeys work.
+
+## 20. Demo Data and End-to-End Scenario
+
+Provide realistic fictional seed data with at least:
+
+- 20 translation projects.
+- 15 linguistic resources.
+- 8 fictional clients.
+- 6 language pairs.
+- Multiple subject-matter specialties.
+- Projects in every workflow stage.
+- Available and unavailable resources.
+- Unassigned projects.
+- Completed assignments.
+- Urgent and overdue projects.
+- Historical quality reviews.
+- Sample file preparation reports.
+- Communication drafts.
+- Audit history.
+
+The dashboard must reflect the seed data and update when the user performs actions.
+
+### Required end-to-end demonstration
+
+1. Log in as a Resource Coordinator.
+2. Create a translation project.
+3. Upload a source TXT or CSV file.
+4. Review the file analysis report.
+5. Complete the file preparation checklist.
+6. Open the resource matching workspace.
+7. Compare qualified translators.
+8. Assign a suitable resource.
+9. Confirm that the assignment is persisted.
+10. Update the project progress.
+11. Trigger or inspect a deadline-risk warning.
+12. Record a linguistic review.
+13. Resolve a quality issue.
+14. Prepare a delivery confirmation draft.
+15. Complete the project workflow.
+16. Verify that dashboard metrics and reports reflect the changes.
+
+The demonstration must use real API calls and database persistence.
+
+## 21. Repository Structure
+
+Use a clear monorepo structure similar to:
+
+`linguaflow-localization-resource-coordinator/`
+
+- `frontend/` — React, TypeScript, and Vite.
+- `backend/` — FastAPI application.
+- `backend/app/api/` — API endpoints.
+- `backend/app/models/` — SQLAlchemy models.
+- `backend/app/schemas/` — Pydantic schemas.
+- `backend/app/services/` — Business logic.
+- `backend/app/core/` — Configuration and security.
+- `backend/alembic/` — Database migrations.
+- `backend/tests/` — Backend tests.
+- `frontend/src/components/` — Reusable UI components.
+- `frontend/src/pages/` — Application pages.
+- `frontend/src/features/` — Feature-specific functionality.
+- `frontend/src/lib/` — API client and utilities.
+- `frontend/src/hooks/` — Reusable hooks.
+- `frontend/src/types/` — TypeScript types.
+- `docs/` — Architecture and workflow documentation.
+- `docker-compose.yml` — Local development environment.
+- `.env.example` — Environment variable names without secrets.
+- `.gitignore` — Appropriate exclusions.
+- `README.md` — Complete documentation.
+
+Adapt the structure when justified, but keep the frontend, backend, database configuration, and deployment responsibilities clearly separated.
+
+## 22. Docker Compose Local Development
+
+Provide a working Docker Compose configuration for local development with:
+
+- Frontend.
+- FastAPI backend.
+- PostgreSQL.
+- Persistent database volume.
+- Environment configuration.
+- Service health checks where practical.
+
+Document the exact startup procedure, migration command, seed-data command, test commands, and shutdown procedure.
+
+Ensure the local application works without requiring Vercel or Render.
+
+Never include production secrets in Docker Compose defaults.
+
+## 23. GitHub README and Portfolio Presentation
+
+Create a polished README containing:
+
+1. Project title and concise description.
+2. Business problem.
+3. Solution overview.
+4. Key features.
+5. Technology stack.
+6. Architecture diagram.
+7. Project lifecycle diagram.
+8. Resource-matching logic.
+9. Database overview.
+10. API documentation instructions.
+11. Local setup.
+12. Environment variables.
+13. Database migration and seeding.
+14. Test execution.
+15. Deployment instructions.
+16. Screenshots of the real application.
+17. Known limitations.
+18. Future improvements.
+19. Project attribution clarifying that LinguaFlow is an independent portfolio simulation.
+
+Use Mermaid diagrams where helpful.
+
+Create a clean Git history with meaningful commits.
+
+Suggested repository name:
+
+`linguaflow-localization-resource-coordinator`
+
+Suggested description:
+
+`A full-stack localization operations platform for translation project coordination, linguistic resource allocation, file preparation, deadline monitoring, and quality assurance.`
+
+Do not fabricate stars, users, performance metrics, testimonials, or customer adoption.
+
+Do not add screenshots until they represent the actual implementation.
+
+## 24. Deployment Configuration and Environment Variables
+
+### Frontend environment
+
+Provide:
+
+`VITE_API_BASE_URL`
+
+Set it in Vercel to the deployed FastAPI base URL, including the required API prefix according to the implemented client configuration.
+
+Only expose variables intended to be public in the browser.
+
+### Backend environment
+
+Provide appropriate configuration variables such as:
+
+- `DATABASE_URL`
+- `SECRET_KEY`
+- `FRONTEND_ORIGIN`
+- `ENVIRONMENT`
+- `LOG_LEVEL`
+- Authentication configuration where needed.
+- Persistent file storage configuration where applicable.
+
+Use `.env.example` with placeholder values only.
+
+Never commit actual credentials.
+
+### Vercel configuration
+
+- Deploy the `frontend` directory as the project root if using the proposed monorepo.
+- Build the frontend using Vite.
+- Configure the `dist` output directory.
+- Configure SPA rewrites only as required by the application's routing.
+- Set the correct production API URL.
+- Verify nested routes after refreshing the browser.
+- Verify that API requests do not accidentally point to localhost.
+
+### Render configuration
+
+- Deploy the Python backend from the `backend` directory or configure the correct build and start paths.
+- Install the backend dependencies.
+- Configure the startup command to match the actual module path.
+- Configure the managed PostgreSQL connection.
+- Run migrations in a controlled manner.
+- Set the correct frontend origin.
+- Verify health-check and API documentation endpoints.
+- Confirm that backend requests succeed from the deployed Vercel frontend.
+
+Do not assume that a deployment succeeds because the hosting provider reports a successful build.
+
+## 25. Implementation Sequence
+
+Build the application in the following order.
+
+### Phase 1 — Foundation
+
+Set up the repository, frontend, FastAPI backend, PostgreSQL, Docker Compose, environment configuration, database models, migrations, and seed data.
+
+### Phase 2 — Authentication and layout
+
+Implement login, role-based permissions, protected routes, application shell, navigation, and the design system.
+
+### Phase 3 — Core coordination
+
+Implement project management, resource directory, assignments, resource matching, and workflow transitions.
+
+### Phase 4 — Operational workflows
+
+Implement file preparation, deadline monitoring, workload management, quality assurance, and communication drafts.
+
+### Phase 5 — Dashboard and reporting
+
+Implement database-backed KPIs, charts, filters, reports, and CSV exports.
+
+### Phase 6 — Verification
+
+Run migrations, seed data, execute automated tests, fix errors, and complete the end-to-end demonstration.
+
+### Phase 7 — Deployment
+
+Deploy the backend and database, deploy the frontend to Vercel, configure environment variables, verify production connectivity, and test all critical workflows.
+
+### Phase 8 — Portfolio preparation
+
+Complete the README, architecture diagrams, screenshots, API documentation, and interview demonstration script.
+
+## 26. Non-Negotiable Quality Requirements
+
+- Build a working application rather than a static prototype.
+- Do not hardcode dashboard metrics.
+- Do not use local browser storage as the authoritative business database.
+- Do not simulate successful database writes.
+- Do not leave important buttons inactive.
+- Do not bypass backend authorization.
+- Do not invent real translation integrations.
+- Do not use fake email delivery.
+- Do not claim unverified deployment success.
+- Do not include secrets in the repository.
+- Do not introduce unnecessary AI features.
+- Keep all essential functionality usable without paid APIs.
+- Provide meaningful loading, error, and empty states.
+- Ensure all forms validate their input.
+- Ensure critical changes are persisted and reflected throughout the application.
+- Document limitations honestly.
+- Keep the application maintainable and easy to run.
+
+## 27. Final Acceptance Criteria
+
+The project is complete only when:
+
+- The frontend builds successfully for Vercel.
+- The backend starts successfully in its hosting environment.
+- PostgreSQL persistence works.
+- Authentication and role restrictions work.
+- Projects can be created, updated, and completed.
+- Linguistic resources can be searched and evaluated.
+- Resource assignments enforce eligibility and capacity.
+- Supported files can be uploaded and analyzed.
+- Deadline risks are calculated correctly.
+- Quality issues can be recorded and resolved.
+- Communication drafts can be created and copied.
+- Reports reflect persisted records.
+- Critical automated tests pass.
+- The entire demonstration scenario works.
+- The deployed frontend communicates successfully with the deployed API.
+- Browser refreshes and nested routes work.
+- Production environment variables are configured securely.
+- GitHub documentation accurately describes the working implementation.
+
+## Final Deliverable
+
+Produce a complete, maintainable, responsive, and professionally designed full-stack application with a Vercel-hosted frontend, a separately hosted FastAPI backend, and managed PostgreSQL persistence.
+
+The final result must be a credible portfolio project demonstrating the operational responsibilities of an Associate Resource Coordinator in the localization industry.
+
+**Prioritize realistic business workflows, reliability, clear communication, attention to detail, transparent resource allocation, and on-time delivery.**

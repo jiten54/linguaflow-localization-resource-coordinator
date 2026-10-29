@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: linguaflow_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-linguaflow}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-linguaflow_secure_pwd}
+      POSTGRES_DB: ${POSTGRES_DB:-linguaflow_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linguaflow -d linguaflow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: linguaflow_api
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://linguaflow:linguaflow_secure_pwd@db:5432/linguaflow_db
+      SECRET_KEY: ${SECRET_KEY:-linguaflow-super-secret-jwt-key-change-in-production-2026}
+      FRONTEND_ORIGIN: http://localhost:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: linguaflow_web
+    restart: always
+    environment:
+      VITE_API_BASE_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local
